@@ -12,7 +12,7 @@ private:
     u8 _fraction;
 public:
     Fraction(int integer, u8 fraction) : \
-        _integer{integer}, _fraction{fraction} {}
+        _integer{integer}, _fraction{(u8)(fraction % 100)} {}
     friend std::ostream &operator<<(std::ostream &out, 
             const Fraction frac);
     Fraction operator+(const Fraction operand2) const {
@@ -41,12 +41,46 @@ public:
         return *this;
     }
     Fraction operator*(const Fraction operand2) const {
-        return Fraction{_integer * operand2._integer, \
-            (u8)(_fraction * operand2._fraction)};
+        int fraction {_integer * operand2._fraction + \
+            _fraction * operand2._integer + \
+                _fraction * operand2._fraction / 100};
+        return Fraction{_integer * operand2._integer + \
+            fraction / 100, (u8)(fraction % 100)};
+    }
+    Fraction &operator*=(const Fraction operand2) {
+        int fraction {_integer * operand2._fraction + \
+            _fraction * operand2._integer + \
+                _fraction * operand2._fraction / 100};
+        _integer *= operand2._integer;
+        _integer += fraction / 100;
+        _fraction = fraction % 100;
+        return *this;
     }
     Fraction operator/(const Fraction operand2) const {
-        return Fraction{_integer / operand2._integer, \
-            (u8)(_fraction / operand2._fraction)};
+        long long result_denominator \
+            {(long long)operand2._integer * \
+                100 + operand2._fraction};
+        if (result_denominator == 0) {
+            return Fraction{0, 0};
+        }
+        long long result_numerator {((long long)_integer * \
+                100 + _fraction) * 100 / result_denominator};
+        return Fraction{(int)(result_numerator / 100), \
+                (u8)(result_numerator % 100)};
+    }
+    Fraction &operator/=(const Fraction operand2) {
+        long long result_denominator \
+            {(long long)operand2._integer * \
+                100 + operand2._fraction};
+        if (result_denominator == 0) {
+            _integer = 0; _fraction = 0;
+        } else {
+            long long result_numerator {((long long)_integer * \
+                    100 + _fraction) * 100 / result_denominator};
+            _integer = result_numerator / 100;
+            _fraction = result_numerator % 100;
+        }
+        return *this;
     }
     bool operator==(const Fraction operand2) const {
         return _integer == operand2._integer && \
