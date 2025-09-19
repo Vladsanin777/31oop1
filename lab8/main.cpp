@@ -1,133 +1,144 @@
 #include <iostream>
-#include <istream>
-#include <ostream>
 #include <string>
 
+using u32 = unsigned int;
+
+// Abstract Base Class: Organization
 class Organization {
+private:
+    std::string m_name;
+    u32 m_employeeCount;
+    u32 m_clientCount;
+
 public:
-    virtual ~Organization() = default;
-    virtual int getEmployeeCount() const = 0;
-    virtual int getClientCount() const = 0;
-    virtual void print(std::ostream& os) const = 0;
-    virtual void read(std::istream& is) = 0;
+    Organization(const std::string &name = {}, \
+            const u32 &employeeCount = 0, \
+            const u32 &clientCount = 0) : \
+        m_name{name}, m_employeeCount{employeeCount}, \
+        m_clientCount{clientCount} {}
+
+    u32 getEmployeeCount(void) const {
+        return m_employeeCount;
+    }
+    u32 getClientCount(void) const {
+        return m_clientCount;
+    }
+    std::string getName(void) const {
+        return m_name;
+    }
+    void setEmployeeCount(u32 newEmployeeCount) {
+        m_employeeCount = newEmployeeCount;
+    }
+    void setClientCount(u32 newClientCount) {
+        m_clientCount = newClientCount;
+    }
+    void setName(std::string newName) {
+        m_name = newName;
+    }
+    virtual void calculateCounts(void) {
+        setClientCount(getEmployeeCount());
+    }
+    friend std::ostream& operator<<(std::ostream& out, \
+            const Organization& org) {
+        out << "Name: " << org.m_name << ", Employees: " << \
+            org.m_employeeCount << ", Clients: " << org.m_clientCount;
+        return out;
+    }
+    friend std::istream& operator>>(std::istream& in, \
+            Organization& org) {
+        std::cout << "Enter name: ";
+        in >> org.m_name;
+        std::cout << "Enter number of employees: ";
+        in >> org.m_employeeCount;
+        std::cout << "Enter number of clients: ";
+        in >> org.m_clientCount;
+        return in;
+    }
 };
 
-template<typename Tp>
-std::ostream& operator<<(std::ostream& os, const Tp& org) {
-    org.print(os);
-    return os;
-}
-
-template<typename Tp>
-std::istream& operator>>(std::istream& is, Tp& org) {
-    org.read(is);
-    return is;
-}
-
 class InsuranceCompany : public Organization {
-    int employees;
-    int clients;
-    std::string name;
-
 public:
-    InsuranceCompany() : employees(0), clients(0), name("") {}
-    InsuranceCompany(int emp, int cli, const std::string& n) : \
-        employees(emp), clients(cli), name(n) {}
-
-    int getEmployeeCount() const override { return employees; }
-    int getClientCount() const override { return clients; }
-
-    void print(std::ostream& os) const override {
-        os << "Insurance Company: " << name 
-           << ", Employees: " << employees 
-           << ", Clients: " << clients;
+    InsuranceCompany(const std::string& name = {}, \
+            const u32 &employeeCount = 0) : \
+    Organization{name, employeeCount, employeeCount / 8} {}
+    void calculateCounts(void) override {
+        setClientCount(getEmployeeCount() / 8);
     }
-
-    void read(std::istream& is) override {
-        std::cout << "Enter name: ";
-        getline(is, name);
-        std::cout << "Enter employees: ";
-        is >> employees;
-        std::cout << "Enter clients: ";
-        is >> clients;
-        is.ignore();
+    friend std::ostream &operator<<(std::ostream &out, \
+            const InsuranceCompany &insuranceCompany) {
+        out << (const Organization&)insuranceCompany;
+        return out;
+    }
+    friend std::istream &operator>>(std::istream &in, \
+            InsuranceCompany &insuranceCompany) {
+        in >> (Organization&)insuranceCompany;
+        return in;
     }
 };
 
 class ShipbuildingCompany : public Organization {
-    int employees;
-    int clients;
-    int shipsBuilt;
-
 public:
-    ShipbuildingCompany(int emp = 0, int cli = 0, int ships = 0) : \
-        employees(emp), clients(cli), shipsBuilt(ships) {}
-
-    int getEmployeeCount() const override { return employees; }
-    int getClientCount() const override { return clients; }
-
-    void print(std::ostream& os) const override {
-        os << "Shipbuilding Company: " 
-           << ", Employees: " << employees 
-           << ", Clients: " << clients 
-           << ", Ships Built: " << shipsBuilt;
+    ShipbuildingCompany(const std::string& name = {}, \
+            const u32 &employeeCount = 0) : \
+        Organization{name, employeeCount, employeeCount * 6} {}
+    void calculateCounts(void) override {
+        setClientCount(getEmployeeCount() * 6);
     }
-
-    void read(std::istream& is) override {
-        std::cout << "Enter employees: ";
-        is >> employees;
-        std::cout << "Enter clients: ";
-        is >> clients;
-        std::cout << "Enter ships built: ";
-        is >> shipsBuilt;
-        is.ignore();
+    friend std::ostream &operator<<(std::ostream &out, \
+            const ShipbuildingCompany &shipbuildingCompany) {
+        out << (const Organization&)shipbuildingCompany;
+        return out;
+    }
+    friend std::istream &operator>>(std::istream &in, \
+            ShipbuildingCompany &shipbuildingCompany) {
+        in >> (Organization&)shipbuildingCompany;
+        return in;
     }
 };
 
 class Factory : public Organization {
-    int employees;
-    int clients;
-    std::string product;
-
 public:
-    Factory() : employees(0), clients(0), product("") {}
-    Factory(int emp, int cli, const std::string& prod) : \
-        employees(emp), clients(cli), product(prod) {}
-
-    int getEmployeeCount() const override { return employees; }
-    int getClientCount() const override { return clients; }
-
-    void print(std::ostream& os) const override {
-        os << "Factory: Product: " << product 
-           << ", Employees: " << employees 
-           << ", Clients: " << clients;
+    Factory(const std::string& name, \
+            const u32 &employeeCount) : \
+        Organization{name, employeeCount, \
+            employeeCount * 4 / 3} {}
+    void calculateCounts(void) override {
+       setClientCount(getEmployeeCount() * 4 / 3);
     }
-
-    void read(std::istream& is) override {
-        std::cout << "Enter product: ";
-        getline(is, product);
-        std::cout << "Enter employees: ";
-        is >> employees;
-        std::cout << "Enter clients: ";
-        is >> clients;
-        is.ignore();
+    friend std::ostream &operator<<(std::ostream &out, \
+            const Factory &factory) {
+        out << (const Organization&)factory;
+        return out;
+    }
+    friend std::istream &operator>>(std::istream &in, \
+            Factory &factory) {
+        in >> (Organization&)factory;
+        return in;
     }
 };
 
 int main() {
-    InsuranceCompany ic;
-    std::cin >> ic;
-    std::cout << ic << std::endl;
-    std::cout << "Employees: " << ic.getEmployeeCount() << \
-        ", Clients: " << ic.getClientCount() << std::endl;
+    InsuranceCompany ins("Global Protect", 500);
+    ShipbuildingCompany ship("Ocean Builders", 2000);
+    Factory factory("Auto Parts Inc.", 1500);
 
-    ShipbuildingCompany sc;
-    std::cin >> sc;
-    std::cout << sc << std::endl;
+    ins.calculateCounts();
+    ship.calculateCounts();
+    factory.calculateCounts();
 
-    Factory f;
-    std::cin >> f;
-    std::cout << f << std::endl;
+    std::cout << "\n--- Initial Objects ---\n";
+    std::cout << ins << std::endl;
+    std::cout << ship << std::endl;
+    std::cout << factory << std::endl;
+
+    // Demonstrate operator overloading for input
+    std::cout << "\n--- Input New Data for Insurance Company ---\n";
+    std::cin >> ins;
+    
+    // Recalculate and display the new data
+    ins.calculateCounts();
+    std::cout << "\n--- Updated Insurance Company ---\n";
+    std::cout << ins << std::endl;
 
     return 0;
 }
