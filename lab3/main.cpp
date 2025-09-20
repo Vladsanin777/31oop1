@@ -14,7 +14,7 @@ public:
     Fraction(Fraction &frac) : 
         _integer{frac._integer}, _fraction{frac._fraction} {}
     Fraction(void) : _integer{0}, _fraction{0} {}
-    Fraction(int integer, u8 fraction) : \
+    Fraction(int integer = 0, u8 fraction = 0) : \
         _integer{integer}, _fraction{(u8)(fraction % 100)} {}
     friend std::ostream &operator<<(std::ostream &out, 
             const Fraction frac);
