@@ -14,13 +14,6 @@ public:
         newSet.insert(other.begin(), other.end());
         return newSet;
     }
-    bool operator==(const Set<T>& other) const {
-        return static_cast<const std::set<T>&>(*this) == \
-            static_cast<const std::set<T>&>(other);
-    }
-    bool operator!=(const Set<T>& other) const {
-        return !(*this == other);
-    }
     friend std::ostream &operator<<( \
             std::ostream &out, const Set<T> &set) {
         out << "set address: " << &set << ": { ";
