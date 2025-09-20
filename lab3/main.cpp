@@ -11,6 +11,9 @@ private:
     int _integer;
     u8 _fraction;
 public:
+    Fraction(Fraction &frac) : 
+        _integer{frac._integer}, _fraction{frac._fraction} {}
+    Fraction(void) : _integer{0}, _fraction{0} {}
     Fraction(int integer, u8 fraction) : \
         _integer{integer}, _fraction{(u8)(fraction % 100)} {}
     friend std::ostream &operator<<(std::ostream &out, 
