@@ -24,7 +24,7 @@ int main() {
         integral = 0.0;
         double h = (b - a) / n;
         
-        #pragma omp parallel for reduction(+:integral)
+#pragma omp parallel for reduction(+:integral)
         for (long long i = 1; i <= n; ++i) {
             double x = a + i * h;
             integral += f(x);

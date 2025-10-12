@@ -35,9 +35,7 @@ public:
     void setName(std::string newName) {
         m_name = newName;
     }
-    virtual void calculateCounts(void) {
-        setClientCount(getEmployeeCount());
-    }
+    virtual void calculateCounts(void) = 0;
     friend std::ostream& operator<<(std::ostream& out, \
             const Organization& org) {
         out << "Name: " << org.m_name << ", Employees: " << \

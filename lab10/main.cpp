@@ -5,23 +5,23 @@
 template<typename T>
 class Vector : public std::vector<T> {
 public:
-    bool operator<(const T &num) const {
-        const typename std::vector<T>::const_iterator itEnd { this->cend() };
-        for (typename std::vector<T>::const_iterator it { this->cbegin() }; \
+    bool operator<(const T& num) const {
+        const typename std::vector<T>::const_iterator itEnd{ this->cend() };
+        for (typename std::vector<T>::const_iterator it{ this->cbegin() }; \
             it != itEnd; it++) if (*it == num) return true;
         return false;
     }
-    Vector<T> operator+(const int& num) const  {
+    Vector<T> operator+(const int& num) const {
         Vector<T> vec{};
-        vec.insert(vec.begin(), this->cbegin()+num, this->cend());
+        vec.insert(vec.begin(), this->cbegin() + num, this->cend());
         return vec;
     }
-    friend std::ostream &operator<<( \
-            std::ostream &out, const Vector<T> &vec) {
+    friend std::ostream& operator<<(\
+        std::ostream& out, const Vector<T>& vec) {
         const typename std::vector<T>::const_iterator \
-            itEnd { vec.cend() };
+            itEnd{ vec.cend() };
         for (typename std::vector<T>::const_iterator \
-                it { vec.begin() }; it != itEnd; it++)
+            it{ vec.begin() }; it != itEnd; it++)
             out << *it << ' ';
         out << std::endl;
         return out;
@@ -41,7 +41,7 @@ int main(void) {
     vecB.push_back(5);
     std::cout << "Vec B: " << vecB;
 
-    Vector<int> vecC {vecA + 1};
+    Vector<int> vecC{ vecA + 1 };
     std::cout << "\nVec A + 1: " << vecC;
 
     std::cout << "\nIs Vec A have number 3? " << (vecC < 3 ? "Yes" : "No") << std::endl;
