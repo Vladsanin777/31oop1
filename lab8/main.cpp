@@ -11,12 +11,17 @@ private:
     u32 m_clientCount;
 
 public:
+    Organization(void) : m_name{}, \
+        m_employeeCount{ 0 }, m_clientCount { 0 } {}
     Organization(const std::string &name = {}, \
             const u32 &employeeCount = 0, \
             const u32 &clientCount = 0) : \
         m_name{name}, m_employeeCount{employeeCount}, \
         m_clientCount{clientCount} {}
-
+    Organization(const Organization &org) : \
+        m_name{ org.m_name }, m_employeeCount{ \
+            org.m_employeeCount }, m_clientCount { \
+                m_clientCount } {}
     u32 getEmployeeCount(void) const {
         return m_employeeCount;
     }
@@ -56,9 +61,13 @@ public:
 
 class InsuranceCompany : public Organization {
 public:
+    InsuranceCompany(void) : Organization{"", 0, 0} {}
     InsuranceCompany(const std::string& name = {}, \
             const u32 &employeeCount = 0) : \
     Organization{name, employeeCount, employeeCount / 8} {}
+    InsuranceCompany(const InsuranceCompany &insurComp) : \
+        Organization{ insurComp.getName(), \
+        insurComp.getEmployeeCount(), insurComp.getClientCount() } {}
     void calculateCounts(void) override {
         setClientCount(getEmployeeCount() / 8);
     }
@@ -76,9 +85,13 @@ public:
 
 class ShipbuildingCompany : public Organization {
 public:
+    ShipbuildingCompany(void) : Organization{ "", 0 , 0} {}
     ShipbuildingCompany(const std::string& name = {}, \
             const u32 &employeeCount = 0) : \
         Organization{name, employeeCount, employeeCount * 6} {}
+    ShipbuildingCompany(const ShipbuildingCompany &shipComp) : \
+        Organization{ shipComp.getName(), \
+            shipComp.getEmployeeCount(), shipComp.getClientCount() } {}
     void calculateCounts(void) override {
         setClientCount(getEmployeeCount() * 6);
     }
@@ -96,10 +109,14 @@ public:
 
 class Factory : public Organization {
 public:
+    Factory(void) : Organization{ "", 0, 0 } {}
     Factory(const std::string& name, \
             const u32 &employeeCount) : \
         Organization{name, employeeCount, \
             employeeCount * 4 / 3} {}
+    Factory(const Factory &fact) : \
+        Organization { fact.getName(), fact.getEmployeeCount(), \
+            fact.getClientCount() } {}
     void calculateCounts(void) override {
        setClientCount(getEmployeeCount() * 4 / 3);
     }
