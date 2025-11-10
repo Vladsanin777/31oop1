@@ -38,7 +38,7 @@ public:
 class Schedule {
 private:
     Time _dayBegin{}, _dayEnd{}, \
-        _dinnerBegin{}, _dinnerEnd{}; // Агрегация Ассоциация Зависимость
+        _dinnerBegin{}, _dinnerEnd{};
 public:
     Schedule(void) : _dayBegin{}, _dayEnd{}, \
         _dinnerBegin{}, _dinnerEnd{} {}
@@ -69,7 +69,7 @@ public:
 
 class Worker {
 private:
-    std::vector<Schedule> _schedule; // Агрегация Ассоциация Зависимость
+    std::vector<Schedule> _schedule;
 public:
     Worker(void) : _schedule{} {}
     Worker(std::vector<Schedule> schedule) : \
@@ -96,7 +96,7 @@ public:
 class Product {
 private:
     unsigned _weight;
-    std::string _name; // Агрегация Ассоциация Зависимость
+    std::string _name;
 public:
     Product(void) : _weight{ 0 }, _name{ "" } {}
     Product(unsigned weight, std::string name) : \
@@ -127,7 +127,7 @@ public:
 class Order {
 private:
     unsigned _number;
-    std::vector<Product> _products; // Агрегация Ассоциация Зависимость
+    std::vector<Product> _products; // Концепция
 public:
     Order(void) : _number{ 0 }, _products{} {}
     Order(unsigned number, \
@@ -163,7 +163,7 @@ class Buyer {
 private:
     long long int _numberCreaditCart{ 0 };
     std::string _name;
-    std::vector<Order> _orders; // Агрегация Ассоциация Зависимость
+    std::vector<Order> _orders;
 public:
     Buyer(void) : _numberCreaditCart{ 0 }, \
         _name{}, _orders{} {}
@@ -207,9 +207,9 @@ public:
 
 class Delivery {
 private:
-    Order _order; // Агрегация Ассоциация Зависимость
+    Order _order;
     Buyer _buyer;
-    Worker _worker;
+    Worker _worker; // Ассоциация
 public:
     Delivery(void) : _order{}, _buyer{}, _worker{} {}
     Delivery(Order order, Buyer buyer, Worker worker) : \
@@ -221,7 +221,7 @@ public:
     void setOrder(Order order) {
         _order = order;
     }
-    void setBuyer(Buyer buyer) {
+    void setBuyer(Buyer buyer) { // Зависимось
         _buyer = buyer;
     }
     Order getOrder(void) const {

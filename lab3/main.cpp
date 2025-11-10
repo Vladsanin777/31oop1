@@ -18,7 +18,7 @@ public:
         _integer{ integer }, _fraction{ (u8)(fraction % 100) } {}
     friend std::ostream& operator<<(std::ostream& out,
         const Fraction &frac);
-    Fraction operator+(const Fraction operand2) const {
+    Fraction add(const Fraction operand2) const {
         u32 fraction{ (u32)(_fraction + operand2._fraction) };
         return Fraction{ (int)(_integer + operand2._integer + \
             (fraction / 100)), (u8)(fraction % 100) };
@@ -29,7 +29,7 @@ public:
         _fraction = fraction % 100;
         return *this;
     }
-    Fraction operator-(const Fraction operand2) const {
+    Fraction sub(const Fraction operand2) const {
         int fraction{ _fraction - operand2._fraction };
         int integer{ _integer - operand2._integer };
         if (fraction < 0)
@@ -43,7 +43,7 @@ public:
         _integer -= operand2._integer;
         return *this;
     }
-    Fraction operator*(const Fraction operand2) const {
+    Fraction imul(const Fraction operand2) const {
         int fraction{ _integer * operand2._fraction + \
             _fraction * operand2._integer + \
                 _fraction * operand2._fraction / 100 };
@@ -59,7 +59,7 @@ public:
         _fraction = fraction % 100;
         return *this;
     }
-    Fraction operator/(const Fraction operand2) const {
+    Fraction div(const Fraction operand2) const {
         long long result_denominator \
         {(long long)operand2._integer* \
             100 + operand2._fraction};
@@ -124,10 +124,10 @@ std::ostream& operator<<(std::ostream& out, const Fraction &frac) {
 
 int main(void) {
     Fraction frac1{ 9, 8 }, frac2{ 7, 9 };
-    std::cout << (frac1 + frac2) << std::endl;
-    std::cout << (frac1 - frac2) << std::endl;
-    std::cout << (frac1 * frac2) << std::endl;
-    std::cout << (frac1 / frac2) << std::endl;
+    std::cout << (frac1.add(frac2)) << std::endl;
+    std::cout << (frac1.sub(frac2)) << std::endl;
+    std::cout << (frac1.imul(frac2)) << std::endl;
+    std::cout << (frac1.div(frac2)) << std::endl;
     std::cout << (frac1 == frac2) << std::endl;
     std::cout << (frac1 != frac2) << std::endl;
     std::cout << (frac1 <= frac2) << std::endl;
